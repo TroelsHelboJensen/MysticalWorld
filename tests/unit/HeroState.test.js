@@ -160,6 +160,52 @@ describe('HeroState', () => {
     });
   });
 
+  // ─── Invincibility ─────────────────────────────────────────────────────────
+
+  describe('startInvincibility', () => {
+    it('sets isInvincible to true', () => {
+      hero.startInvincibility();
+      expect(hero.isInvincible).toBe(true);
+    });
+
+    it('stores the remaining duration', () => {
+      hero.startInvincibility(800);
+      expect(hero._invincibilityRemaining).toBe(800);
+    });
+
+    it('defaults to 800ms', () => {
+      hero.startInvincibility();
+      expect(hero._invincibilityRemaining).toBe(800);
+    });
+  });
+
+  describe('tickInvincibility', () => {
+    it('decrements remaining time each tick', () => {
+      hero.startInvincibility(800);
+      hero.tickInvincibility(300);
+      expect(hero._invincibilityRemaining).toBe(500);
+    });
+
+    it('clears invincibility when remaining time reaches 0', () => {
+      hero.startInvincibility(800);
+      hero.tickInvincibility(800);
+      expect(hero.isInvincible).toBe(false);
+    });
+
+    it('clears invincibility when delta exceeds remaining time', () => {
+      hero.startInvincibility(200);
+      hero.tickInvincibility(500);
+      expect(hero.isInvincible).toBe(false);
+      expect(hero._invincibilityRemaining).toBe(0);
+    });
+
+    it('does nothing when not invincible', () => {
+      expect(hero.isInvincible).toBe(false);
+      expect(() => hero.tickInvincibility(100)).not.toThrow();
+      expect(hero.isInvincible).toBe(false);
+    });
+  });
+
   describe('setPosition', () => {
     it('updates position without changing direction or isMoving', () => {
       hero.move(1, 0, 110, 100); // now facing right, isMoving true

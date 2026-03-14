@@ -47,12 +47,37 @@ export class Hero extends Phaser.GameObjects.Sprite {
   // ─── Phaser lifecycle ──────────────────────────────────────────────────────
 
   update(time, delta) {
+    this.state.tickInvincibility(delta);
+
     if (this._isAttacking) return; // lock movement during swing
 
     const dt = delta / 1000; // seconds
     this._handleMovement(dt);
     this._handleAttack();
     this._syncSprite();
+  }
+
+  /**
+   * Apply damage to the hero, respecting invincibility frames.
+   * Ignored silently if the hero is currently invincible.
+   * Otherwise applies damage and starts an 800ms i-frame window with a
+   * flashing sprite effect.
+   * @param {number} amount
+   */
+  takeDamage(amount) {
+    if (this.state.isInvincible) return;
+
+    this.state.takeDamage(amount);
+    this.state.startInvincibility(800);
+
+    this.scene.tweens.add({
+      targets:    this,
+      alpha:      0,
+      duration:   100,
+      yoyo:       true,
+      repeat:     3,
+      onComplete: () => { this.alpha = 1; },
+    });
   }
 
   // ─── Input ─────────────────────────────────────────────────────────────────

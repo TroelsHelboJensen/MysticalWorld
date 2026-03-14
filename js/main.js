@@ -1,3 +1,5 @@
+import { GameScene } from '../maps/GameScene.js';
+
 // Phaser.AUTO = 0. Defined here so the config object is importable in tests
 // without Phaser being present in the environment.
 const AUTO = 0;
@@ -9,7 +11,7 @@ export const gameConfig = {
   height: 600,
   pixelArt: true,
   backgroundColor: '#000000',
-  scene: [],
+  scene: [GameScene],
 };
 
 // Guard lets unit tests import this file without a browser / Phaser present.

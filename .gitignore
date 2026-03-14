@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Test output
+coverage/
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# Vitest cache
+.vitest-cache/
+
+# Build / dist (no build step now, but good to have)
+dist/
+build/
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor directories
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.bak

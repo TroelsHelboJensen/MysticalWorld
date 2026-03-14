@@ -1,0 +1,6 @@
+{
+  "pages": [
+    { "text": "Greetings, brave adventurer! The roads are dangerous these days.", "options": [] },
+    { "text": "Can I help you?", "options": ["Talk", "Trade", "Goodbye"] }
+  ]
+}

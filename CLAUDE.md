@@ -79,6 +79,43 @@ Never put game logic (damage formulas, inventory operations, currency math) insi
 
 All GitHub issues, labels, and milestones are defined in [`github-setup.json`](github-setup.json). An agent can use this file with the GitHub CLI (`gh`) to create the full project board. See the `instructions_for_agent` section in that file.
 
+## Branching Strategy
+
+### Branch Naming
+
+Every issue gets its own branch:
+
+```
+main                          ← stable, always runnable
+└── phase/<number>-<slug>     ← e.g. phase/1-foundation
+└── feature/<slug>            ← bug fixes or unplanned work
+```
+
+### Flow per Issue
+
+```bash
+git checkout -b phase/1-foundation   # create branch for the issue
+# do the work, commit often
+gh pr create --title "Phase 1 – Foundation" --body "Closes #1"
+# merge to main via squash merge after npm test passes
+```
+
+PR body must contain `Closes #<n>` — the issue auto-closes on merge.
+
+### Commit Message Convention
+
+```
+feat: add CurrencySystem with silver/gold conversion
+test: add unit tests for InventoryManager equip slots
+fix: hero stops at collision tiles correctly
+chore: update CLAUDE.md with save state shape
+```
+
+### Rules
+- `main` is never broken — only merge when `npm test` passes
+- One branch per issue — never bundle multiple phases into one branch
+- Delete branches after merge
+
 ## Testing Requirements
 Before marking any task as complete:
 1. Write unit tests for new functionality or run all tests

@@ -41,6 +41,10 @@ export class HeroState {
 
     // Inventory reference — set by InventoryManager in Phase 9
     this.inventory = null;
+
+    // Invincibility frames (set by takeDamage flow in Hero.js)
+    this.isInvincible          = false;
+    this._invincibilityRemaining = 0;
   }
 
   // ─── Health ────────────────────────────────────────────────────────────────
@@ -74,6 +78,31 @@ export class HeroState {
   increaseMaxHp(amount, healOnIncrease = true) {
     this.maxHp += amount;
     if (healOnIncrease) this.hp = Math.min(this.hp + amount, this.maxHp);
+  }
+
+  // ─── Invincibility ─────────────────────────────────────────────────────────
+
+  /**
+   * Begin an invincibility window of durationMs milliseconds.
+   * While active, Hero.js should skip incoming damage.
+   * @param {number} [durationMs=800]
+   */
+  startInvincibility(durationMs = 800) {
+    this.isInvincible            = true;
+    this._invincibilityRemaining = durationMs;
+  }
+
+  /**
+   * Advance the invincibility timer. Call every frame from Hero.js update().
+   * @param {number} delta  milliseconds since last frame
+   */
+  tickInvincibility(delta) {
+    if (!this.isInvincible) return;
+    this._invincibilityRemaining -= delta;
+    if (this._invincibilityRemaining <= 0) {
+      this.isInvincible            = false;
+      this._invincibilityRemaining = 0;
+    }
   }
 
   // ─── Movement ──────────────────────────────────────────────────────────────

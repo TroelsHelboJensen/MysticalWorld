@@ -77,7 +77,19 @@ Never put game logic (damage formulas, inventory operations, currency math) insi
 
 ## GitHub Project Setup
 
-All GitHub issues, labels, and milestones are defined in [`github-setup.json`](github-setup.json). An agent can use this file with the GitHub CLI (`gh`) to create the full project board. See the `instructions_for_agent` section in that file.
+All 18 issues, 5 milestones and 13 labels have been created on GitHub. The source of truth is [`github-setup.json`](github-setup.json).
+
+- Issues: #1–#18 (one per phase)
+- Milestones: M1 (IDs 1–5) mapped to issues automatically
+- Labels: `phase:*`, `type:*`, `priority:*`
+
+### gh CLI (Windows)
+
+`gh` is not on the default bash PATH. Prefix every session:
+
+```bash
+export PATH="$PATH:/c/Program Files/GitHub CLI"
+```
 
 ## Branching Strategy
 
@@ -115,6 +127,7 @@ chore: update CLAUDE.md with save state shape
 - `main` is never broken — only merge when `npm test` passes
 - One branch per issue — never bundle multiple phases into one branch
 - Delete branches after merge
+- `node_modules/` is git-ignored — never commit it
 
 ## Testing Requirements
 Before marking any task as complete:

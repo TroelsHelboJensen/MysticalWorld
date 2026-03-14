@@ -38,3 +38,13 @@ tests/                  unit/, integration/, e2e/
 ## Architecture
 
 Game logic lives in **pure JS classes** with zero Phaser dependency. Phaser scenes are thin rendering/input wrappers that call the logic classes. This keeps all business logic unit-testable with Vitest + jsdom.
+
+## Development progress
+
+| Milestone | Phases | Status |
+|-----------|--------|--------|
+| M1 – Playable Foundation | 1 · 2 · 3 · 4 · CLAUDE.md | 🔄 Phase 1 in review |
+| M2 – Core RPG Systems | 5 · 6 · 7 · 8 · 9 | ⏳ Pending |
+| M3 – Full UI | 10 · 11 · 12 · 13 | ⏳ Pending |
+| M4 – World & Dungeons | 14 · 15 | ⏳ Pending |
+| M5 – Polish & E2E | 16 · 17 | ⏳ Pending |

@@ -1,0 +1,197 @@
+{
+  "repository": {
+    "name": "MysticalWorld",
+    "description": "A top-down RPG inspired by The Legend of Zelda: A Link to the Past. Built with Phaser.js and vanilla JavaScript.",
+    "topics": ["game", "rpg", "phaser", "javascript", "html5", "canvas", "top-down"],
+    "visibility": "private"
+  },
+
+  "labels": [
+    { "name": "phase:foundation",   "color": "0075ca", "description": "Project setup and infrastructure" },
+    { "name": "phase:gameplay",     "color": "e4e669", "description": "Core gameplay mechanics" },
+    { "name": "phase:world",        "color": "7057ff", "description": "Maps, dungeons, world building" },
+    { "name": "phase:ui",           "color": "d93f0b", "description": "HUD, menus, inventory screens" },
+    { "name": "phase:systems",      "color": "0e8a16", "description": "RPG systems: combat, items, currency" },
+    { "name": "phase:persistence",  "color": "5319e7", "description": "Save/load system" },
+    { "name": "phase:testing",      "color": "e11d48", "description": "Unit, integration and E2E tests" },
+    { "name": "type:feature",       "color": "a2eeef", "description": "New feature" },
+    { "name": "type:test",          "color": "f9d0c4", "description": "Test implementation" },
+    { "name": "type:config",        "color": "bfd4f2", "description": "Configuration and tooling" },
+    { "name": "priority:high",      "color": "b60205", "description": "Must be done first" },
+    { "name": "priority:medium",    "color": "fbca04", "description": "Normal priority" },
+    { "name": "priority:low",       "color": "c5def5", "description": "Nice to have" }
+  ],
+
+  "milestones": [
+    {
+      "title": "M1 – Playable Foundation",
+      "description": "Project runs in browser. Hero walks on a tile map. Tests infrastructure in place.",
+      "due_on": null
+    },
+    {
+      "title": "M2 – Core RPG Systems",
+      "description": "Combat, HP, currency, items, equipment and vendor all functional with unit tests.",
+      "due_on": null
+    },
+    {
+      "title": "M3 – Full UI",
+      "description": "HUD, inventory screen, dialogue box and shop UI all complete.",
+      "due_on": null
+    },
+    {
+      "title": "M4 – World & Dungeons",
+      "description": "Full overworld, one village, one dungeon with boss. Save/load working.",
+      "due_on": null
+    },
+    {
+      "title": "M5 – Polish & E2E",
+      "description": "E2E tests passing, world content complete, game shippable.",
+      "due_on": null
+    }
+  ],
+
+  "issues": [
+    {
+      "title": "Phase 1 – Project foundation and folder structure",
+      "milestone": "M1 – Playable Foundation",
+      "labels": ["phase:foundation", "type:config", "priority:high"],
+      "body": "## Goal\nSet up the complete project skeleton so all future phases have a home.\n\n## Tasks\n- [ ] Create folder structure: `characters/`, `characters/enemies/`, `characters/npcs/`, `maps/`, `maps/dungeons/`, `ui/`, `persistence/`, `assets/sprites/`, `assets/tilesets/`, `assets/sounds/`\n- [ ] Create `index.html` — loads Phaser.js via CDN, mounts the canvas, links `css/ui.css` and `js/main.js`\n- [ ] Create `css/ui.css` — base styles for HTML overlays (loading screen, menu wrappers)\n- [ ] Create `js/main.js` — Phaser game config (width: 800, height: 600, pixelArt: true, scene list)\n- [ ] Create placeholder `README.md` with project overview and how to run\n- [ ] Create `CLAUDE.md` with architecture, folder roles, and logic-vs-Phaser separation rule\n\n## Acceptance Criteria\n- Opening `index.html` in a browser shows a black Phaser canvas with no console errors\n- All folders exist with a `.gitkeep` so they are tracked by git\n\n## Notes\nPhaser.js version: 3.x loaded from CDN. No build step required for the game itself — keep it runnable by opening `index.html` directly."
+    },
+
+    {
+      "title": "Phase 2 – Test infrastructure (Vitest + Playwright)",
+      "milestone": "M1 – Playable Foundation",
+      "labels": ["phase:testing", "type:config", "priority:high"],
+      "body": "## Goal\nSet up testing before any game logic is written so every system is testable from day one.\n\n## Tasks\n- [ ] Create `package.json` with dev dependencies: `vitest`, `@playwright/test`, `jsdom`\n- [ ] Create `vitest.config.js` — use `jsdom` environment, include `tests/unit/**` and `tests/integration/**`\n- [ ] Create `playwright.config.js` — base URL `http://localhost:8080`, test dir `tests/e2e/`\n- [ ] Create folder structure: `tests/unit/`, `tests/integration/`, `tests/e2e/`\n- [ ] Add npm scripts: `test` (vitest run), `test:watch` (vitest), `test:e2e` (playwright), `test:all` (both)\n- [ ] Create a simple sanity test `tests/unit/sanity.test.js` that asserts `1 + 1 === 2`\n- [ ] Confirm `npm test` passes\n\n## Acceptance Criteria\n- `npm test` runs Vitest and passes\n- `npm run test:e2e` runs Playwright (may fail until game is running — that is OK)\n- No Phaser or browser canvas is needed to run unit tests\n\n## Architecture Rule\nAll game logic must be implemented as **pure JS classes** (no `new Phaser.*` inside them). Phaser scenes are thin view wrappers only. This separation is what makes unit tests possible."
+    },
+
+    {
+      "title": "Phase 3 – Tilemap rendering system",
+      "milestone": "M1 – Playable Foundation",
+      "labels": ["phase:world", "type:feature", "priority:high"],
+      "body": "## Goal\nRender a scrollable tile-based overworld map with collision.\n\n## Tasks\n- [ ] Create `maps/MapManager.js` (pure JS) — loads map JSON, exposes tile data, handles scene transitions\n- [ ] Create `maps/GameScene.js` (Phaser.Scene) — renders tilemap, sets up camera, calls MapManager\n- [ ] Create a sample `maps/overworld.json` — minimal Tiled-compatible map (32×32 tiles, 40×30 grid)\n- [ ] Add a collision tile layer — tiles marked as blocked stop the player\n- [ ] Camera follows the hero with world bounds set to map size\n- [ ] Create `assets/tilesets/overworld.png` placeholder (colored tiles: green=grass, blue=water, brown=dirt)\n\n## Acceptance Criteria\n- Overworld map renders correctly in the browser\n- Camera scrolls as the player moves\n- Collision tiles block movement\n\n## Tile Size\n32×32 pixels (easier to work with at modern screen sizes while keeping the retro look)."
+    },
+
+    {
+      "title": "Phase 4 – Hero character (movement + animations)",
+      "milestone": "M1 – Playable Foundation",
+      "labels": ["phase:gameplay", "type:feature", "priority:high"],
+      "body": "## Goal\nA controllable hero character that walks around the map with smooth animations.\n\n## Tasks\n- [ ] Create `characters/HeroState.js` (pure JS) — manages position, direction, speed, HP, stats, inventory reference. No Phaser.\n- [ ] Create `characters/Hero.js` (Phaser.GameObjects.Sprite) — reads input, calls HeroState, plays animations\n- [ ] 4-directional movement (up/down/left/right) via arrow keys and WASD\n- [ ] Idle animation (1 frame per direction)\n- [ ] Walk animation (4 frames per direction = 16 total frames)\n- [ ] Sword swing animation (4 frames per direction)\n- [ ] Hero stops at collision tiles\n- [ ] Create placeholder spritesheet `assets/sprites/hero.png` (colored rectangles per frame)\n\n## Acceptance Criteria\n- Hero walks in 4 directions with correct animation\n- Hero cannot walk through collision tiles\n- Switching direction immediately plays correct animation\n\n## Architecture Note\n`HeroState.js` must be importable in Vitest without any Phaser context."
+    },
+
+    {
+      "title": "Phase 5 – RPG health system",
+      "milestone": "M2 – Core RPG Systems",
+      "labels": ["phase:systems", "type:feature", "priority:high"],
+      "body": "## Goal\nA proper RPG HP system — not heart containers. HP is numeric, scalable, and displayed as a bar.\n\n## Tasks\n- [ ] Add to `HeroState.js`: `hp`, `maxHp`, `takeDamage(amount)`, `heal(amount)`, `isDead()`, `increaseMaxHp(amount)`\n- [ ] HP is clamped: `0 <= hp <= maxHp`\n- [ ] Create `characters/StatusEffects.js` (pure JS) — poison, regeneration tick logic\n- [ ] Potions: small potion restores 20 HP, large potion restores full HP\n- [ ] Death state: hero stops, death animation plays, respawn at last save point\n- [ ] Create `tests/unit/HeroState.test.js` covering: takeDamage, heal, death threshold, maxHp scaling\n\n## Acceptance Criteria\n- `npm test` passes all HeroState HP tests\n- HP never goes below 0 or above maxHp\n- Hero death triggers correctly at hp === 0"
+    },
+
+    {
+      "title": "Phase 6 – Combat system",
+      "milestone": "M2 – Core RPG Systems",
+      "labels": ["phase:systems", "type:feature", "priority:high"],
+      "body": "## Goal\nSword-based melee combat with damage formula, hitboxes, and invincibility frames.\n\n## Tasks\n- [ ] Create `js/CombatCalculator.js` (pure JS) — `calcDamage(attacker, defender)`: `max(1, attack - defense)`, crit (1.5×, 10% chance)\n- [ ] Hero sword swing: press Space or Z → swing animation → rectangular hitbox active for 200ms in facing direction\n- [ ] On hitbox overlap with enemy: call `CombatCalculator.calcDamage`, apply to enemy HP\n- [ ] Enemy attacks hero: on contact, deal damage, hero gets 800ms invincibility frames (flashing sprite)\n- [ ] Knockback: hit target moves back 32px in hit direction over 200ms\n- [ ] Create `tests/unit/CombatCalculator.test.js`: damage formula, min 1 damage, crit range, invincibility timing\n\n## Acceptance Criteria\n- `npm test` passes all CombatCalculator tests\n- Sword swing has correct hitbox and duration\n- Invincibility frames prevent damage spam"
+    },
+
+    {
+      "title": "Phase 7 – Currency system (Silver & Gold)",
+      "milestone": "M2 – Core RPG Systems",
+      "labels": ["phase:systems", "type:feature", "priority:medium"],
+      "body": "## Goal\nSilver and Gold coin currency. 100 Silver = 1 Gold. Auto-converts on pickup.\n\n## Tasks\n- [ ] Create `js/CurrencySystem.js` (pure JS): stores total value in silver internally, exposes `addSilver(n)`, `addGold(n)`, `spend(silver)`, `toDisplay()` → `{ gold, silver }`, `toString()` → `'3G 47S'`\n- [ ] Auto-convert: when silver >= 100, convert to gold automatically\n- [ ] `spend(amount)` returns `false` if insufficient funds (never go negative)\n- [ ] Coins drop from enemies and chests as `{ silver: n }` or `{ gold: n }` loot entries\n- [ ] Coin pickup animation: floating text shows `+5S` or `+1G`\n- [ ] Create `tests/unit/CurrencySystem.test.js`: conversion, display, spend, edge cases (exact 100S, 0 balance, insufficient funds)\n\n## Acceptance Criteria\n- `npm test` passes all CurrencySystem tests\n- 100S auto-converts to 1G correctly\n- Player cannot spend more than they have"
+    },
+
+    {
+      "title": "Phase 8 – Enemy system",
+      "milestone": "M2 – Core RPG Systems",
+      "labels": ["phase:gameplay", "type:feature", "priority:high"],
+      "body": "## Goal\nEnemy base class with AI state machine, plus two concrete enemies.\n\n## Tasks\n- [ ] Create `characters/enemies/EnemyState.js` (pure JS) — AI states: `idle`, `patrol`, `chase`, `attack`, `flee`, `dead`. State transition logic.\n- [ ] Create `characters/enemies/Enemy.js` (Phaser.Sprite) — renders enemy, runs EnemyState tick\n- [ ] AI behaviours: patrol (random walk), chase (move toward hero when within 150px), attack (melee on contact)\n- [ ] Drop table: each enemy has a `drops` array of `{ type, chance, value }` entries\n- [ ] Create `characters/enemies/Slime.js` — slow, low HP, drops silver\n- [ ] Create `characters/enemies/Darknut.js` — armored, high defense, drops gold\n- [ ] Create `tests/unit/EnemyState.test.js`: state transitions, drop roll logic\n\n## Acceptance Criteria\n- Enemies patrol when hero is far, chase when close, attack on contact\n- Drops spawn correctly on death\n- `npm test` passes all EnemyState tests"
+    },
+
+    {
+      "title": "Phase 9 – Item and equipment system",
+      "milestone": "M2 – Core RPG Systems",
+      "labels": ["phase:systems", "type:feature", "priority:high"],
+      "body": "## Goal\nItems with stats. Equipment slots. Equip/unequip recalculates hero stats.\n\n## Tasks\n- [ ] Create `js/ItemRegistry.js` (pure JS) — master list of all items: `{ id, name, type, slot, stats, description, buyPrice, sellPrice, icon }`\n- [ ] Item types: `weapon`, `shield`, `armor`, `accessory`, `consumable`\n- [ ] Equipment slots: `weapon`, `shield`, `armor`, `accessory` (one item per slot)\n- [ ] Create `js/InventoryManager.js` (pure JS): `addItem(id)`, `removeItem(id)`, `equipItem(id)`, `unequipItem(slot)`, `getEquipped()`, inventory max size (24 slots)\n- [ ] `StatSystem.js`: recalculates `attack`, `defense`, `speed`, `maxHp` from base stats + equipped item bonuses\n- [ ] Create `tests/unit/InventoryManager.test.js`: add/remove, equip/unequip, full inventory limit, wrong slot type rejection, stat recalculation\n\n## Acceptance Criteria\n- `npm test` passes all InventoryManager and StatSystem tests\n- Equipping a weapon increases attack stat immediately\n- Cannot equip armor in weapon slot"
+    },
+
+    {
+      "title": "Phase 10 – Inventory UI screen",
+      "milestone": "M3 – Full UI",
+      "labels": ["phase:ui", "type:feature", "priority:medium"],
+      "body": "## Goal\nPause menu showing inventory grid, equipment slots, item tooltips and actions.\n\n## Tasks\n- [ ] Create `ui/Inventory.js` (Phaser.Scene, runs over game scene) — opens on Escape/I key\n- [ ] Left panel: 24-slot grid showing carried items with icon + quantity\n- [ ] Right panel: equipment slots diagram (head, weapon, shield, armor, accessory)\n- [ ] Hover/select item: show tooltip (name, stats, description, buy/sell price)\n- [ ] Item actions on click: Equip, Use (consumable), Drop, Sell (only near vendor)\n- [ ] Keyboard navigation supported (arrow keys + Enter)\n\n## Acceptance Criteria\n- Inventory opens and closes without breaking game state\n- Equipping an item from inventory moves it to the equipment slot\n- Tooltip shows correct stats for all item types"
+    },
+
+    {
+      "title": "Phase 11 – Vendor / shop system",
+      "milestone": "M3 – Full UI",
+      "labels": ["phase:systems", "type:feature", "priority:medium"],
+      "body": "## Goal\nVendor NPCs that buy and sell items. Player can sell items for silver/gold.\n\n## Tasks\n- [ ] Create `js/VendorSystem.js` (pure JS): `buyItem(itemId, inventory, currency)`, `sellItem(itemId, inventory, currency)`. Sell price = 50% of buy price (floored). Returns `{ success, reason }`.\n- [ ] Create `ui/ShopUI.js` (Phaser.Scene overlay) — two-column layout: vendor stock (left), player inventory (right), currency display\n- [ ] Vendor stock is defined per NPC instance in map data\n- [ ] Insufficient funds shows error message, item is not transferred\n- [ ] Create `tests/unit/VendorSystem.test.js`: buy success, buy insufficient funds, sell success, sell price formula\n\n## Acceptance Criteria\n- `npm test` passes all VendorSystem tests\n- Player can buy and sell items with correct currency changes\n- Shop UI opens when interacting with a vendor NPC"
+    },
+
+    {
+      "title": "Phase 12 – HUD (heads-up display)",
+      "milestone": "M3 – Full UI",
+      "labels": ["phase:ui", "type:feature", "priority:medium"],
+      "body": "## Goal\nAlways-visible HUD: HP bar, currency, equipped items.\n\n## Tasks\n- [ ] Create `ui/HUD.js` (Phaser.Scene, fixed camera, runs in parallel with game scene)\n- [ ] HP bar: colored bar (green→yellow→red based on % HP) with `HP: 45/80` text\n- [ ] Currency display: coin icon + `3G 47S`\n- [ ] Two equipped item slots (weapon + secondary): icon + name\n- [ ] HP bar animates smoothly when HP changes\n- [ ] HUD updates reactively when `HeroState` changes (event emitter)\n\n## Acceptance Criteria\n- HUD is always visible during gameplay (not hidden on scene change)\n- HP bar correctly reflects current HP and changes in real time\n- Currency updates immediately after pickup or purchase"
+    },
+
+    {
+      "title": "Phase 13 – NPC and dialogue system",
+      "milestone": "M3 – Full UI",
+      "labels": ["phase:gameplay", "type:feature", "priority:medium"],
+      "body": "## Goal\nTalkable NPCs with a text dialogue box and action branching.\n\n## Tasks\n- [ ] Create `characters/npcs/NPC.js` (Phaser.Sprite) — idle animation, proximity indicator (press E icon)\n- [ ] Create `ui/DialogBox.js` (Phaser.Scene overlay) — bottom-panel dialogue box, NPC name header, text paging (press E to advance), blinking cursor\n- [ ] Dialogue data lives in `characters/npcs/dialogues/` as JSON: `[ { text, options: [{label, action}] } ]`\n- [ ] Branching: options list renders as a choice menu (e.g. `[Talk] [Trade] [Goodbye]`)\n- [ ] `Trade` option opens `ShopUI` for vendor NPCs\n- [ ] Game movement pauses while dialogue is open\n\n## Acceptance Criteria\n- Player can walk up to NPC, press E, read dialogue, advance pages, and close\n- Vendor branch opens shop correctly\n- Movement is locked during dialogue"
+    },
+
+    {
+      "title": "Phase 14 – Dungeon system",
+      "milestone": "M4 – World & Dungeons",
+      "labels": ["phase:world", "type:feature", "priority:medium"],
+      "body": "## Goal\nRoom-based dungeon with locked doors, chests, keys and a boss room.\n\n## Tasks\n- [ ] Create `maps/dungeons/DungeonManager.js` (pure JS) — room state (visited, cleared, locked), key count, mini-map data\n- [ ] Room transition: screen fade when hero reaches a door tile, load next room scene, position hero at entry point\n- [ ] Locked doors require 1 key item; door opens permanently for that save\n- [ ] Chests: one-time loot (item or currency), state saved so re-entering room doesn't re-spawn chest\n- [ ] Mini-map overlay: shows rooms as rectangles, current room highlighted, visited rooms visible\n- [ ] Boss room: special room with boss enemy, locked until all prior rooms are cleared\n- [ ] Create `maps/dungeons/dungeon1.json` — 6-room dungeon layout\n\n## Acceptance Criteria\n- Rooms transition correctly and hero spawns at the correct door\n- Locked doors open with a key\n- Chest state persists across room re-entries within a session"
+    },
+
+    {
+      "title": "Phase 15 – Save and load system",
+      "milestone": "M4 – World & Dungeons",
+      "labels": ["phase:persistence", "type:feature", "priority:high"],
+      "body": "## Goal\nPersistent save slots using localStorage. Auto-save on room transition.\n\n## Tasks\n- [ ] Create `persistence/SaveManager.js` (pure JS): `save(slot, gameState)`, `load(slot)` → gameState or null, `deleteSave(slot)`, `listSlots()`. Uses `JSON.stringify/parse`. 3 slots.\n- [ ] `gameState` snapshot includes: hero HP/maxHp/position/stats, inventory, equipped items, currency, map ID, room ID, visited rooms, chest states, quest flags\n- [ ] Auto-save triggers on every room/scene transition\n- [ ] Corrupt/missing save: `load()` returns `null`, game shows 'New Game' option gracefully\n- [ ] Create `ui/SaveSlotUI.js` — save slot selection screen shown on game boot\n- [ ] Create `tests/unit/SaveManager.test.js`: save/load roundtrip, all 3 slots, corrupt JSON fallback, slot overwrite\n- [ ] Create `tests/integration/SaveLoad.test.js`: full game state → save → mutate state → load → state matches original\n\n## Acceptance Criteria\n- `npm test` passes all SaveManager and SaveLoad integration tests\n- Reloading the page and selecting a save slot restores exact game state"
+    },
+
+    {
+      "title": "Phase 16 – E2E tests (Playwright)",
+      "milestone": "M5 – Polish & E2E",
+      "labels": ["phase:testing", "type:test", "priority:medium"],
+      "body": "## Goal\nEnd-to-end browser tests confirming the game boots and core flows work.\n\n## Tasks\n- [ ] Set up a local static file server for Playwright to use (e.g. `npx serve .` or `npx http-server`)\n- [ ] `tests/e2e/boot.test.js`: game loads, canvas is visible, no console errors\n- [ ] `tests/e2e/hero-movement.test.js`: pressing arrow key causes hero position to change\n- [ ] `tests/e2e/hud.test.js`: HUD is visible after boot, HP bar renders\n- [ ] `tests/e2e/save-load.test.js`: save game → reload page → load save → hero is at saved position\n- [ ] `tests/e2e/vendor.test.js`: interact with vendor NPC → shop opens → buy item → currency decreases\n\n## Acceptance Criteria\n- `npm run test:e2e` passes all Playwright tests against locally served game\n- No test relies on hardcoded pixel positions — use game state / DOM elements"
+    },
+
+    {
+      "title": "Phase 17 – World building (overworld + village + dungeon 1)",
+      "milestone": "M5 – Polish & E2E",
+      "labels": ["phase:world", "type:feature", "priority:medium"],
+      "body": "## Goal\nA complete playable world: overworld, one village, one dungeon with a boss.\n\n## Tasks\n- [ ] Design full overworld map (80×60 tiles): open fields, forests, paths, water, mountains impassable\n- [ ] Village area: 4–6 buildings, 3 NPCs (blacksmith vendor, healer, story NPC), inn (restores full HP for 10S)\n- [ ] Place enemy spawn zones across overworld (Slimes in fields, Darknuts near dungeon entrance)\n- [ ] Connect overworld to dungeon entrance via door tile on map\n- [ ] Dungeon 1: 6 rooms, locked doors, chests with sword upgrade and gold, boss enemy (large Darknut with 200 HP)\n- [ ] Boss drops unique item on death\n- [ ] Place save crystal in village (interact to save manually)\n\n## Acceptance Criteria\n- Player can walk from spawn → village → dungeon entrance → complete dungeon → defeat boss\n- All NPCs have dialogue\n- All chest/drop/vendor interactions work end-to-end"
+    },
+
+    {
+      "title": "Update CLAUDE.md with final architecture and commands",
+      "milestone": "M1 – Playable Foundation",
+      "labels": ["phase:foundation", "type:config", "priority:high"],
+      "body": "## Goal\nKeep CLAUDE.md accurate and useful as the project grows.\n\n## Tasks\n- [ ] Document all npm scripts: `npm test`, `npm run test:watch`, `npm run test:e2e`, `npm run test:all`, `npm start` (static server)\n- [ ] Document folder roles (one line each)\n- [ ] Document the logic-vs-Phaser separation rule with an example\n- [ ] Document item slot types and currency system rules\n- [ ] Document save state shape\n\n## Note\nThis issue should be updated (not closed and re-opened) as the project evolves. Keep CLAUDE.md reflecting current reality."
+    }
+  ],
+
+  "instructions_for_agent": {
+    "summary": "Use the GitHub CLI (gh) to create this project. Run each step in order.",
+    "steps": [
+      "1. Create the repository: gh repo create MysticalWorld --private --description '...' (use repository.description)",
+      "2. Clone it locally and push the existing files (index.html, CLAUDE.md, README.md, github-setup.json)",
+      "3. Create all labels: iterate labels array, run: gh label create '<name>' --color '<color>' --description '<description>'",
+      "4. Create all milestones: iterate milestones array, run: gh api repos/{owner}/{repo}/milestones --method POST --field title='...' --field description='...'",
+      "5. Create all issues: for each issue in issues array, resolve milestone title to ID from step 4, then run: gh issue create --title '...' --body '...' --label '...' --milestone <id>",
+      "6. Issues should be created in order (they will be numbered #1 through #18 matching the phases)"
+    ],
+    "notes": [
+      "All label names in issues[] match exactly the names defined in labels[]",
+      "Milestone titles in issues[] match exactly the titles defined in milestones[]",
+      "The body fields use GitHub Flavored Markdown with task checkboxes"
+    ]
+  }
+}

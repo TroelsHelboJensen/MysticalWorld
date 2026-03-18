@@ -91,6 +91,16 @@ All 18 issues, 5 milestones and 13 labels have been created on GitHub. The sourc
 export PATH="$PATH:/c/Program Files/GitHub CLI"
 ```
 
+## Feature or Issue strategy
+After i ask for a change and before you start new development
+1. Checkout main and pull new changes
+2. Create an issue in github with the task at hand
+3. Follow branching strategy and create a new branch from main branch
+4. start a code review with the code-reviewer agent
+ 1. If the code-reviewer agent doesn't report any issues than commit and push the changes
+ 2. If any questions then answer them and present the findes and answers
+6. Create a PR
+
 ## Branching Strategy
 
 ### Branch Naming

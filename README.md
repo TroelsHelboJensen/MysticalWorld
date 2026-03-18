@@ -35,6 +35,15 @@ assets/                 Sprites, tilesets, sounds
 tests/                  unit/, integration/, e2e/
 ```
 
+## Controls
+
+| Action | Keys |
+|--------|------|
+| Move | Arrow keys or WASD |
+| Attack (sword swing) | Space or Z |
+| Quick save | F5 |
+| Quick load | F9 |
+
 ## Architecture
 
 Game logic lives in **pure JS classes** with zero Phaser dependency. Phaser scenes are thin rendering/input wrappers that call the logic classes. This keeps all business logic unit-testable with Vitest + jsdom.

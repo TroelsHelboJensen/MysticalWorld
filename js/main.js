@@ -1,4 +1,7 @@
 import { GameScene } from '../maps/GameScene.js';
+import { HUD }       from '../ui/HUD.js';
+import { ShopUI }    from '../ui/ShopUI.js';
+import { DialogueBox } from '../ui/DialogueBox.js';
 
 // Phaser.AUTO = 0. Defined here so the config object is importable in tests
 // without Phaser being present in the environment.
@@ -15,7 +18,7 @@ export const gameConfig = {
     default: 'arcade',
     arcade: { gravity: { y: 0 }, debug: false },
   },
-  scene: [GameScene],
+  scene: [GameScene, HUD, ShopUI, DialogueBox],
 };
 
 // Guard lets unit tests import this file without a browser / Phaser present.

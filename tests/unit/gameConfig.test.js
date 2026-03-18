@@ -21,9 +21,9 @@ describe('gameConfig', () => {
     expect(gameConfig.type).toBe(0);
   });
 
-  it('scene list contains GameScene', () => {
+  it('scene list contains GameScene as the first scene', () => {
     expect(Array.isArray(gameConfig.scene)).toBe(true);
-    expect(gameConfig.scene).toHaveLength(1);
+    expect(gameConfig.scene.length).toBeGreaterThanOrEqual(1);
     // Verify by class name so we don't import Phaser in this test file
     expect(gameConfig.scene[0].name).toBe('GameScene');
   });

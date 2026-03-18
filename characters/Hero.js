@@ -30,9 +30,11 @@ export class Hero extends Phaser.GameObjects.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
 
+    this.setScale(0.75);              // 32px sprite → 24px on screen
+
     /** @type {Phaser.Physics.Arcade.Body} */
-    this.body.setSize(24, 24);        // smaller hitbox than sprite
-    this.body.setOffset(4, 8);
+    this.body.setSize(20, 20);        // hitbox scaled to match display size
+    this.body.setOffset(6, 10);
 
     this.mapManager = mapManager;
     this.state = new HeroState({ x, y });

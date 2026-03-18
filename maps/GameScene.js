@@ -71,7 +71,8 @@ export class GameScene extends Phaser.Scene {
     this.hero = new Hero(this, spawnX, spawnY, this.mapManager);
     this.hero.state.inventory = this.inventory;   // attach inventory to hero state
 
-    // Camera
+    // Camera — zoom 1.5× so 32px tiles fill the screen at a readable pixel-art scale
+    this.cameras.main.setZoom(1.5);
     this.cameras.main.setBounds(
       0, 0,
       this.mapManager.mapWidthPx,

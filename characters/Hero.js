@@ -168,9 +168,44 @@ export class Hero extends Phaser.GameObjects.Sprite {
 
     this._isAttacking = true;
     this.play(`sword-${this.state.direction}`, true);
+    this._spawnSlashEffect(this.state.direction);
 
-    this._attackTimer = this.scene.time.delayedCall(300, () => {
+    // End attack when animation finishes; fallback timer covers edge cases
+    this.once('animationcomplete', (anim) => {
+      if (anim.key.startsWith('sword-')) this._isAttacking = false;
+    });
+    if (this._attackTimer) this._attackTimer.remove();
+    this._attackTimer = this.scene.time.delayedCall(400, () => {
       this._isAttacking = false;
+    });
+  }
+
+  /**
+   * Spawns a brief arc flash in the attack direction that fades out.
+   * @param {'down'|'up'|'left'|'right'} direction
+   */
+  _spawnSlashEffect(direction) {
+    const OFFSET = { down: [0, 14], up: [0, -14], left: [-14, 0], right: [14, 0] };
+    const ARC    = { down: [-20, 200], up: [160, 380], left: [70, 290], right: [-110, 110] };
+
+    const [ox, oy]     = OFFSET[direction];
+    const [start, end] = ARC[direction];
+
+    const g = this.scene.add.graphics({ x: this.x + ox, y: this.y + oy });
+    g.setDepth(10);
+    g.lineStyle(3, 0xffffcc, 1);
+    g.beginPath();
+    g.arc(0, 0, 12, Phaser.Math.DegToRad(start), Phaser.Math.DegToRad(end));
+    g.strokePath();
+
+    this.scene.tweens.add({
+      targets:    g,
+      alpha:      0,
+      scaleX:     1.5,
+      scaleY:     1.5,
+      duration:   200,
+      ease:       'Power2',
+      onComplete: () => g.destroy(),
     });
   }
 

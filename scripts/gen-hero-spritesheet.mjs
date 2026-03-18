@@ -59,7 +59,43 @@ function setPixel(x, y, r, g, b, a) {
   pixels[i] = r; pixels[i+1] = g; pixels[i+2] = b; pixels[i+3] = a;
 }
 
-function drawFrame(col, row, color, frameIndex, type) {
+// Sword swing angles (degrees) per direction × 4 frames
+// 0° = right, 90° = down, 180° = left, 270° = up
+const SWORD_SWING = {
+  down:  [-40, 10, 55, 100],   // upper-right → downward sweep
+  up:    [140, 170, 220, 260], // lower-left  → upward sweep
+  left:  [50,  100, 145, 180], // upper area  → leftward sweep
+  right: [230, 280, 325, 360], // lower area  → rightward sweep
+};
+
+function drawSword(ox, oy, dir, frameIndex) {
+  const cx = TILE / 2;
+  const cy = 17; // anchor near hands (slightly below body centre)
+  const a  = SWORD_SWING[dir][frameIndex] * Math.PI / 180;
+
+  // Handle — brown, 3 px
+  for (let d = 3; d <= 6; d++) {
+    const sx = Math.round(cx + Math.cos(a) * d);
+    const sy = Math.round(cy + Math.sin(a) * d);
+    if (sx > 0 && sx < TILE-1 && sy > 0 && sy < TILE-1)
+      setPixel(ox+sx, oy+sy, 139, 90, 43, 255);
+  }
+
+  // Blade — silver gradient, 10 px long, 2 px wide
+  for (let d = 6; d <= 16; d++) {
+    const sx = Math.round(cx + Math.cos(a) * d);
+    const sy = Math.round(cy + Math.sin(a) * d);
+    const v  = 150 + Math.round((d - 6) / 10 * 90);
+    for (let pw = 0; pw <= 1; pw++) {
+      const fx = sx + Math.round(-Math.sin(a) * pw);
+      const fy = sy + Math.round( Math.cos(a) * pw);
+      if (fx > 0 && fx < TILE-1 && fy > 0 && fy < TILE-1)
+        setPixel(ox+fx, oy+fy, v, v, v, 255);
+    }
+  }
+}
+
+function drawFrame(col, row, color, dir, frameIndex, type) {
   const ox = col * TILE;
   const oy = row * TILE;
   const [r, g, b] = color;
@@ -75,19 +111,19 @@ function drawFrame(col, row, color, frameIndex, type) {
       const cx = TILE / 2, cy = TILE / 2;
       const inHead = (px-cx)**2 + (py-8)**2 < 49;   // radius ~7
       const inBody = px >= cx-4 && px <= cx+4 && py >= 14 && py <= 26;
-      // Sword indicator on frame > 0 for sword rows
-      const inSword = type === 'sword' && frameIndex > 0 &&
-                      px >= cx+5 && px <= cx+9 && py >= 10 && py <= 24;
 
       if (inHead || inBody) {
-        const shade = border ? 0 : (inHead ? 30 : 0);
+        const shade = inHead ? 30 : 0;
         setPixel(ox+px, oy+py, Math.min(255,r+shade), Math.min(255,g+shade), Math.min(255,b+shade), 255);
-      } else if (inSword) {
-        setPixel(ox+px, oy+py, 220, 220, 220, 255);
       } else {
         setPixel(ox+px, oy+py, 0, 0, 0, 0); // transparent
       }
     }
+  }
+
+  // Direction-aware sword drawn on top for sword-type frames
+  if (type === 'sword') {
+    drawSword(ox, oy, dir, frameIndex);
   }
 }
 
@@ -98,7 +134,7 @@ for (let row = 0; row < ROWS; row++) {
     let dir = meta.dir;
     if (row === 0) dir = IDLE_COL_DIRS[col]; // row 0: each col = different dir
     const color = DIR_COLORS[dir];
-    drawFrame(col, row, color, col, meta.type);
+    drawFrame(col, row, color, dir, col, meta.type);
   }
 }
 

@@ -29,13 +29,18 @@ const ROWS = 9;
 const W = COLS * TILE; // 128
 const H = ROWS * TILE; // 288
 
-// Body colour per direction
+// Body colour per direction (tunic/clothing color)
 const DIR_COLORS = {
   down:  [70,  130, 220, 255],  // blue
   up:    [220, 100, 70,  255],  // red
   left:  [70,  190, 100, 255],  // green
   right: [200, 160, 50,  255],  // gold
 };
+
+// Skin tone for head/face
+const SKIN = [215, 178, 138];
+// Dark hair color
+const HAIR = [80, 50, 20];
 
 const ROW_META = [
   { dir: 'down',  type: 'idle'  },
@@ -95,26 +100,61 @@ function drawSword(ox, oy, dir, frameIndex) {
   }
 }
 
+// Leg Y-ranges [top, bottom] per walk frame for left and right legs
+// Frame alternates: neutral → left-forward → neutral → right-forward
+const WALK_LEGS = [
+  { L: [21, 28], R: [21, 28] }, // frame 0: neutral
+  { L: [19, 26], R: [23, 28] }, // frame 1: left forward
+  { L: [21, 28], R: [21, 28] }, // frame 2: neutral
+  { L: [23, 28], R: [19, 26] }, // frame 3: right forward
+];
+
 function drawFrame(col, row, color, dir, frameIndex, type) {
   const ox = col * TILE;
   const oy = row * TILE;
   const [r, g, b] = color;
 
+  const legs = (type === 'walk') ? WALK_LEGS[frameIndex % 4] : WALK_LEGS[0];
+
   for (let py = 0; py < TILE; py++) {
     for (let px = 0; px < TILE; px++) {
       const border = px === 0 || py === 0 || px === TILE-1 || py === TILE-1;
       if (border) {
-        setPixel(ox+px, oy+py, 0, 0, 0, 255);
+        setPixel(ox+px, oy+py, 0, 0, 0, 0); // transparent border — no box artifact
         continue;
       }
-      // Simple stick-figure silhouette: head (circle) + body rectangle
-      const cx = TILE / 2, cy = TILE / 2;
-      const inHead = (px-cx)**2 + (py-8)**2 < 49;   // radius ~7
-      const inBody = px >= cx-4 && px <= cx+4 && py >= 14 && py <= 26;
 
-      if (inHead || inBody) {
-        const shade = inHead ? 30 : 0;
-        setPixel(ox+px, oy+py, Math.min(255,r+shade), Math.min(255,g+shade), Math.min(255,b+shade), 255);
+      const cx = 16;
+
+      // Head: small circle at top, skin-toned. Center py=8 closes the neck gap to shoulders.
+      const inHead = (px-cx)**2 + (py-8)**2 <= 22; // radius ~4.7
+
+      // Hair: top arc of head circle (above center of head)
+      const inHair = inHead && py <= 7;
+
+      // Neck: 2-pixel tall connector between head bottom (~py=12) and shoulders (py=13)
+      const inNeck = px >= 14 && px <= 18 && py >= 12 && py <= 13;
+
+      // Shoulders: wide bar at collar
+      const inShoulders = px >= 8 && px <= 24 && py >= 13 && py <= 14;
+
+      // Torso
+      const inTorso = px >= 11 && px <= 21 && py >= 14 && py <= 20;
+
+      // Arms (sides of torso, slightly shorter at bottom)
+      const inLeftArm  = px >= 8  && px <= 10 && py >= 14 && py <= 19;
+      const inRightArm = px >= 22 && px <= 24 && py >= 14 && py <= 19;
+
+      // Legs: two separate columns
+      const inLeftLeg  = px >= 11 && px <= 14 && py >= legs.L[0] && py <= legs.L[1];
+      const inRightLeg = px >= 18 && px <= 21 && py >= legs.R[0] && py <= legs.R[1];
+
+      if (inHair) {
+        setPixel(ox+px, oy+py, HAIR[0], HAIR[1], HAIR[2], 255);
+      } else if (inHead) {
+        setPixel(ox+px, oy+py, SKIN[0], SKIN[1], SKIN[2], 255);
+      } else if (inNeck || inShoulders || inTorso || inLeftArm || inRightArm || inLeftLeg || inRightLeg) {
+        setPixel(ox+px, oy+py, r, g, b, 255);
       } else {
         setPixel(ox+px, oy+py, 0, 0, 0, 0); // transparent
       }
